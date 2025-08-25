@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReyyDev Store - Digital Hosting Jepang</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0f2c, #1e2a78, #0a0f2c);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* Background grid digital */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 2px;
+      border-bottom: 2px solid #00f2ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      margin-top: 20px;
+      background: rgba(0,0,0,0.7);
+      font-size: 14px;
+      border-top: 2px solid #00f2ff;
+    }
+
+    .page {
+      display: none;
+      padding: 20px;
+    }
+
+    .login-container, .register-container, .settings-container {
+      max-width: 350px;
+      margin: 80px auto;
+      background: rgba(0,0,0,0.6);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #00f2ff;
+      text-align: center;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    button {
+      background: #00f2ff;
+      border: none;
+      padding: 10px 18px;
+      margin: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #007bff;
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    nav button {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid #00f2ff;
+      color: white;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: rgba(0,0,0,0.7);
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px #00f2ff;
+      transition: transform 0.3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card h3 {
+      margin: 10px 0;
+    }
+
+    .category-title {
+      margin: 30px 0 15px;
+      font-size: 22px;
+      border-bottom: 2px solid #00f2ff;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>🌸 ReyyDev Store — Digital Hosting Jepang 🌸<br>🌐 <a href="https://reyymarketplace.my.id" style="color:#00f2ff;text-decoration:none;">reyymarketplace.my.id</a></header>
+
+  <!-- LOGIN -->
+  <div id="loginPage" class="page" style="display:block">
+    <div class="login-container">
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p>Belum punya akun? <a href="#" onclick="showPage('registerPage')">Register</a></p>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="registerPage" class="page">
+    <div class="register-container">
+      <h2>Register</h2>
+      <input type="text" id="regUsername" placeholder="Username">
+      <input type="password" id="regPassword" placeholder="Password">
+      <button onclick="register()">Daftar</button>
+      <p>Sudah punya akun? <a href="#" onclick="showPage('loginPage')">Login</a></p>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settingsPage" class="page">
+    <div class="settings-container">
+      <h2>⚙️ Pengaturan Akun</h2>
+      <button onclick="changePassword()">Ubah Password</button>
+      <button onclick="deleteAccount()">Hapus Akun</button>
+      <button onclick="logout()">Ganti Akun</button>
+      <p>🌐 Domain: <strong>reyymarketplace.my.id</strong></p>
+    </div>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div id="mainPage" class="page">
+    <h2 id="welcomeMsg">Selamat Datang!</h2>
+    <nav>
+      <button onclick="showProducts()">Produk</button>
+      <button onclick="showPage('settingsPage')">Settings</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+    <div id="productsPage"></div>
+  </div>
+
+  <footer>© 2025 ReyyDev Store | 🌐 <a href="https://reyymarketplace.my.id" style="color:#00f2ff;text-decoration:none;">reyymarketplace.my.id</a></footer>
+
+  <script>
+    // Ganti halaman
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+
+    // Register
+    function register() {
+      const user = document.getElementById("regUsername").value.trim();
+      const pass = document.getElementById("regPassword").value.trim();
+      if (!user || !pass) { alert("⚠️ Username & Password wajib diisi!"); return; }
+      if (user.length < 3) { alert("⚠️ Username minimal 3 karakter!"); return; }
+      if (pass.length < 6) { alert("⚠️ Password minimal 6 karakter!"); return; }
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+      if (users[user]) {
+        alert("❌ Username sudah digunakan!");
+      } else {
+        users[user] = pass;
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("✅ Registrasi berhasil! Silakan login.");
+        showPage("loginPage");
+      }
+    }
+
+    // Login
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+      if (users[user] && users[user] === pass) {
+        document.getElementById("welcomeMsg").innerText = "Halo, " + user + "!";
+        showPage("mainPage");
+      } else {
+        alert("❌ Username atau Password salah!");
+      }
+    }
+
+    // Logout
+    function logout() {
+      showPage("loginPage");
+    }
+
+    // Ubah Password
+    function changePassword() {
+      const currentUser = document.getElementById("welcomeMsg").innerText.replace("Halo, ", "").replace("!", "");
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+      const newPass = prompt("Masukkan password baru:");
+      if (newPass && newPass.length >= 6) {
+        users[currentUser] = newPass;
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("✅ Password berhasil diubah!");
+      } else {
+        alert("⚠️ Password minimal 6 karakter!");
+      }
+    }
+
+    // Hapus Akun
+    function deleteAccount() {
+      const currentUser = document.getElementById("welcomeMsg").innerText.replace("Halo, ", "").replace("!", "");
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+      if (confirm("Apakah Anda yakin ingin menghapus akun?")) {
+        delete users[currentUser];
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("✅ Akun berhasil dihapus.");
+        logout();
+      }
+    }
+
+    // Produk
+    function showProducts() {
+      const container = document.getElementById("productsPage");
+      container.innerHTML = "";
+      
+      // Hosting
+      const hosting = [
+        "Hosting Basic", "Hosting Pro", "Hosting Unlimited", "Hosting Premium",
+        "Hosting Startup", "Hosting Business", "Hosting Cloud A", "Hosting Cloud B",
+        "Hosting VPS", "Hosting Dedicated"
+      ];
+
+      container.innerHTML += '<h3 class="category-title">🌐 Produk Hosting</h3>';
+      let hHTML = '<div class="products">';
+      hosting.forEach((p,i)=>{
+        hHTML += `<div class='product-card'><h3>${p}</h3><p>Rp ${(i+1)*10000}</p><button>Beli</button></div>`;
+      });
+      hHTML += '</div>';
+      container.innerHTML += hHTML;
+
+      // Editing
+      const editing = [
+        "Edit Foto Basic", "Edit Video Basic", "Edit Foto Pro", "Edit Video Pro",
+        "Retouch Foto", "Color Grading Video", "Desain Poster", "Desain Feed IG",
+        "Edit Cinematic", "Edit Wedding"
+      ];
+
+      container.innerHTML += '<h3 class="category-title">🎨 Produk Editing</h3>';
+      let eHTML = '<div class="products">';
+      editing.forEach((p,i)=>{
+        eHTML += `<div class='product-card'><h3>${p}</h3><p>Rp ${(i+1)*15000}</p><button>Beli</button></div>`;
+      });
+      eHTML += '</div>';
+      container.innerHTML += eHTML;
+    }
+  </script>
+</body>
+</html>
